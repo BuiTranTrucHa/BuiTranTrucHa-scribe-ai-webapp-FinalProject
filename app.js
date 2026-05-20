@@ -435,7 +435,7 @@ function briefSection() {
 function briefContent() {
   if (state.briefTab === 1) return briefTabTwo();
   if (state.briefTab === 2) return briefTabThree();
-  return `<div style="font-s>${dataRow("Độc giả", "Content Strategist / Manager · B2B SaaS · team 5–15 người")}${dataRow("Góc viết", "Framework có thể áp dụng ngay — không lý thuyết")}${dataRow("Tone", "Confident + Direct")}${dataRow("Tone chiến dịch", `${toneTagsHtml()} <button class="btn btn-plain" style="min-height:0;padding:0 0 0 4px;font-size:14px;color:var(--brand)" data-tone-panel>Đề xuất chỉnh tone ↗</button>${state.toneSent ? `<span style="margin-left:8px;color:var(--amber);font-size:10px;font-style:italic">(Đang chờ duyệt)</span>` : ""}`)}${state.tonePanel ? tonePanel() : ""}${dataRow("CTA", "Bắt đầu thử miễn phí — 14 ngày")}${dataRow("Stage", tag("Awareness"))}</div>`;
+  return `<div>${dataRow("Độc giả", "Content Strategist / Manager · B2B SaaS · team 5–15 người")}${dataRow("Góc viết", "Framework có thể áp dụng ngay — không lý thuyết")}${dataRow("Tone", "Confident + Direct")}${dataRow("Tone chiến dịch", `${toneTagsHtml()} <button class="btn btn-plain" style="min-height:0;padding:0 0 0 4px;font-size:14px;color:var(--brand)" data-tone-panel>Đề xuất chỉnh tone ↗</button>${state.toneSent ? `<span style="margin-left:8px;color:var(--amber);font-size:10px;font-style:italic">(Đang chờ duyệt)</span>` : ""}`)}${state.tonePanel ? tonePanel() : ""}${dataRow("CTA", "Bắt đầu thử miễn phí — 14 ngày")}${dataRow("Stage", tag("Awareness"))}</div>`;
 }
 
 function dataRow(k, v) { return `<div class="data-row"><div class="key">${k}</div><div class="value">${v}</div></div>`; }
