@@ -119,9 +119,9 @@ function render() {
 }
 
 function shell(active, content, mainClass = "") {
-  const activeUser = active === "canvas" ? ["TK", "Tuấn Khải", "Content Writer"] : ["LH", "Lan Hương", "Content Strategist"];
+  const activeUser = active === "canvas" ? ["TK", "Tuấn Khải", "Content Writer"] : ["👩🏻‍💼", "Lan Hương", "Content Strategist"];
   return `
-    <div class="page-shell ${state.sidebarCollapsed ? "collapsed" : ""}">
+    <div class="page-shell ${active}-shell ${state.sidebarCollapsed ? "collapsed" : ""}">
       <aside class="sidebar">
         <div class="sidebar-logo">
           <button class="sidebar-toggle" type="button" data-sidebar-toggle aria-label="${state.sidebarCollapsed ? "Mở navigation" : "Thu gọn navigation"}" title="${state.sidebarCollapsed ? "Mở navigation" : "Thu gọn navigation"}">${logo()}</button>
@@ -234,7 +234,6 @@ function homePage() {
 
 function dashboardPage() {
   setTitle("Tháng 5, 2026 ");
-  const subtitle = state.dashboardRange === "7 ngày" ? "Tháng 5, 2025 · 4 bài đã publish" : state.dashboardRange === "90 ngày" ? "Q1–Q2 2025 · 38 bài đã publish" : "14 bài đã publish";
   const rows = [
     ["Scribe AI vs Google Analytics — so sánh thật", "potential", 92, "consideration", "Lượt quay lại tăng 40% — người đọc quay lại lần 2"],
     ["B2B content strategy 2025 — framework thực tế", "potential", 87, "awareness", "Độ sâu cuộn 78% — cao nhất tháng này"],
@@ -243,36 +242,41 @@ function dashboardPage() {
     ["Tại sao B2B team cần phân tích content", "review", 28, "awareness", "Chia sẻ nội bộ giảm — topic có thể đã bão hòa"],
   ];
   return `
-    <section class="page-header">
-      <div><h1 class="h1">Tháng 5, 2026</h1><div class="muted" style="font-size:14px;margin-top:4px">${subtitle}</div></div>
+    <section class="page-header dashboard-hero-header">
+      <div><h1 class="h1">Xin chào, Lan Hương</h1></div>
       <div class="header-actions">
         <button class="btn" data-dropdown="range">${state.dashboardRange} ▾</button>
         <button class="btn" data-export>${icons.download}<span>Xuất báo cáo</span></button>
       </div>
     </section>
-    <section class="metric-grid">
+    <section class="metric-grid dashboard-metrics">
       <div class="metric-card metric-card-large">
-        <div class="metric mono">64</div>
-        <div class="label">Điểm tín hiệu trung bình</div>
-        <div class="muted" style="margin-top:8px">Tổng hợp từ behavioral signals — thời gian đọc, độ sâu cuộn, lượt quay lại</div>
-        <div class="trendline up" style="margin-top:24px">↑ 8 điểm so với tháng trước</div>
+        <div class="metric-copy">
+          <div class="metric mono">64</div>
+          <div class="label">Điểm tín hiệu trung bình tháng này</div>
+          <div class="trendline up">Tăng 8 điểm so với tháng trước</div>
+        </div>
+        <div class="bar-chart" aria-hidden="true">
+          ${[34, 24, 42, 52, 62].map((height, index) => `<div class="bar-wrap"><span class="bar ${index === 4 ? "active" : ""}" style="height:${height}px"></span><small>${String(index + 1).padStart(2, "0")}/2026</small></div>`).join("")}
+        </div>
       </div>
-      ${metricCard("5", "Bài đang hoạt động tốt", "↑ 2 so với tháng trước", "up")}
-      ${metricCard("3", "Bài cần xem lại", "↓ 1 so với tháng trước", "down")}
+      ${metricCard("3", "Bài score cao (>70)", "", "up")}
+      ${metricCard("2", "Bài score thấp (<50)", "", "down")}
     </section>
-    <section class="table-card">
-      <div class="table-head"><div>Bài viết</div><div>Trạng thái</div><div style="text-align:right">Điểm tín hiệu</div><div style="text-align:right">Xu hướng</div><div>Lý do thay đổi</div><div></div></div>
-      ${rows.slice(0,3).map((r, i) => dashboardRow(r, i)).join("")}
-      ${rows.slice(3).map((r, i) => dashboardRow(r, i + 3, "attention")).join("")}
-      <div class="table-row opportunity">
-        <div class="row-title">Decision stage — chưa có bài nào phủ</div>${tag("Decision", true)}<div class="mono tertiary">—</div><div class="mono tertiary">—</div>
-        <div class="reason">Khoảng trống được phát hiện tự động — đang bỏ lỡ stage chuyển đổi quan trọng</div><button class="btn btn-soft" data-nav="/planning">Tạo brief →</button>
+    <section class="content-card article-list-card">
+      <div class="section-heading">
+        <h2 class="h2">Danh sách bài viết</h2>
+        <p>5 bài viết đã đăng tải</p>
+      </div>
+      <div class="table-card">
+        <div class="table-head"><div>Bài viết</div><div>Trạng thái</div><div>Điểm tín hiệu</div><div>Giai đoạn</div><div>Lý do thay đổi</div></div>
+        ${rows.map((r, i) => dashboardRow(r, i, i > 2 ? "attention" : "")).join("")}
       </div>
     </section>`;
 }
 
 function metricCard(number, label, trend, cls) {
-  return `<div class="metric-card"><div class="metric mono">${number}</div><div class="label">${label}</div><div class="trendline ${cls}">${trend}</div></div>`;
+  return `<div class="metric-card metric-card-small ${cls}"><div class="metric mono">${number}</div><div class="label">${label}</div>${trend ? `<div class="trendline ${cls}">${trend}</div>` : ""}</div>`;
 }
 
 function dashboardRow(r, index, extra = "") {
@@ -281,7 +285,7 @@ function dashboardRow(r, index, extra = "") {
   return `
     <div class="table-row ${extra}" data-expand-row="${index}">
       <div class="row-title">${r[0]}</div><div>${tag(r[1])}</div><div class="score-cell">${scoreBadge(r[2])}</div>
-      <div class="trend" style="text-align:right">${tag(r[3])}</div><div class="reason">${r[4]}</div><div>${icons.chevron.replace("chevron", `chevron ${open ? "open" : ""}`)}</div>
+      <div class="trend">${tag(r[3])}</div><div class="reason">${r[4]}</div>
     </div>
     ${open ? `<div class="expand-panel">
       ${signalCol("Tín hiệu hành vi", [["Thời gian đọc","4:22"],["Độ sâu cuộn","78%"],["Lượt quay lại","40%", "up"]])}
@@ -299,19 +303,19 @@ function planningPage() {
   const topics = planningTopics().filter(t => !state.rejected.has(t.id));
   const visible = state.planningFilter === "approved" ? topics.filter(t => state.approved.has(t.id)) : state.planningFilter === "gap" ? topics.filter(t => t.gap) : topics;
   return `
-    <section class="page-header">
-      <div><h1 class="h1">Độ phủ nội dung</h1><div class="muted" style="font-size:13px;margin-top:4px"> ${3 - state.approved.size - state.rejected.size} chủ đề đang chờ duyệt</div></div>
-      <div class="header-actions"><button class="btn" data-month>Tháng này▾</button><button class="btn">${icons.calendar}Lịch nội dung</button></div>
+    <section class="page-header planning-hero-header">
+      <div><h1 class="h1">Xin chào, Lan Hương</h1></div>
+      <div class="header-actions"><button class="btn" data-month>Tháng này ▾</button><button class="btn" data-export>${icons.download}<span>Xuất báo cáo</span></button></div>
     </section>
     <section class="coverage">
       <div class="coverage-grid">
-        ${coverageCol("awareness", "6", "78", 78, "Đang tốt", "up")}
-        ${coverageCol("consideration", "3", "52", 52, "Cần thêm bài", "amber")}
-        ${coverageCol("decision", "0", "—", 0, "Chưa có bài · Gap phát hiện tự động", "down")}
+        ${coverageCol("awareness", "2", "69", 58, "Cần thêm bài", "amber")}
+        ${coverageCol("consideration", "2", "82", 82, "Đang tốt", "up")}
+        ${coverageCol("decision", "1", "51", 50, "Cần cải thiện", "amber")}
       </div>
     </section>
-    <section>
-      <div class="topic-header"><h2 class="h2" style="font-size:15px">Chủ đề được đề xuất</h2><div class="tabs">
+    <section class="content-card topic-panel">
+      <div class="topic-header"><div><h2 class="h2">Chủ đề đề xuất</h2><p>${3 - state.approved.size - state.rejected.size} bài viết đang chờ duyệt</p></div><div class="tabs">
         ${filterBtn("all", "Tất cả")}${filterBtn("gap", "Đang thiếu")}${filterBtn("approved", "Đã duyệt")}
       </div></div>
       <div class="topic-list">
@@ -321,7 +325,7 @@ function planningPage() {
 }
 
 function coverageCol(stage, count, avg, fill, status, cls, priority = false) {
-  return `<div class="coverage-col">${tag(stage)}<div class="coverage-count"><span class="metric mono">${count}</span><span class="muted">bài</span></div><div class="mono muted" style="font-size:12px">Điểm tín hiệu TB: ${avg}</div><div class="progress ${cls === "amber" ? "amber" : ""}"><span style="width:${fill}%"></span></div><div class="${cls}" style="font-size:11px;margin-top:6px">${status}</div>${priority ? `<div class="tag low" style="margin-top:7px;background:#faece7;color:#712b13;font-size:10px">Ưu tiên cao</div>` : ""}</div>`;
+  return `<div class="coverage-col">${tag(stage)}<div class="coverage-count"><span class="metric mono">${count}</span><span>Bài</span></div><div class="coverage-average">Điểm tín hiệu trung bình: ${avg}</div><div class="progress ${cls === "amber" ? "amber" : ""}"><span style="width:${fill}%"></span></div><div class="${cls} coverage-status">${status}</div>${priority ? `<div class="tag low" style="margin-top:7px;background:#faece7;color:#712b13;font-size:10px">Ưu tiên cao</div>` : ""}</div>`;
 }
 
 function filterBtn(id, label) {
@@ -341,7 +345,7 @@ function topicCard(t) {
   const approved = state.approved.has(t.id);
   const rejecting = state.rejecting === t.id;
   return `<article class="topic-card ${t.priority ? "priority" : ""}" data-topic="${t.id}">
-    <div class="topic-top"><div style="display:flex;gap:8px;align-items:center">${tag(t.stage)}${t.gap ? `<span class="tertiary" style="font-size:10px">Lấp gap ·</span>` : ""}</div>${icons.chevron.replace("chevron", `chevron ${open ? "open" : ""}`)}</div>
+    <div class="topic-top"><div style="display:flex;gap:8px;align-items:center">${tag(t.stage)}</div>${icons.chevron.replace("chevron", `chevron ${open ? "open" : ""}`)}</div>
     <h3 class="topic-title">${t.title}</h3>
     <div class="topic-reason">${t.reason}</div>
     ${rejecting ? rejectPanel(t.id) : `<div class="topic-bottom"><div><span class="estimate" style="${t.stage === "Awareness" ? "background:#f7f6f3;color:#6b6a65" : t.stage === "Consideration" ? "background:#faeeda;color:#633806" : ""}">${t.estimate}</span><div class="${t.id === "roi" ? "tertiary" : "up"}" style="margin-top:6px;font-size:11px;font-style:italic">${t.history}</div></div><div class="topic-actions">${approved ? approvedActions() : `<button class="btn btn-primary" data-approve="${t.id}">Duyệt & Tạo brief</button><button class="btn" data-reject="${t.id}">Từ chối</button>`}</div></div>`}
