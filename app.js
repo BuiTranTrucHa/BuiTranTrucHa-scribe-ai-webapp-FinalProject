@@ -348,7 +348,7 @@ function topicCard(t) {
     <div class="topic-top"><div style="display:flex;gap:8px;align-items:center">${tag(t.stage)}</div>${icons.chevron.replace("chevron", `chevron ${open ? "open" : ""}`)}</div>
     <h3 class="topic-title">${t.title}</h3>
     <div class="topic-reason">${t.reason}</div>
-    ${rejecting ? rejectPanel(t.id) : `<div class="topic-bottom"><div><span class="estimate" style="${t.stage === "Awareness" ? "background:#f7f6f3;color:#6b6a65" : t.stage === "Consideration" ? "background:#faeeda;color:#633806" : ""}">${t.estimate}</span><div class="${t.id === "roi" ? "tertiary" : "up"}" style="margin-top:6px;font-size:11px;font-style:italic">${t.history}</div></div><div class="topic-actions">${approved ? approvedActions() : `<button class="btn btn-primary" data-approve="${t.id}">Duyệt & Tạo brief</button><button class="btn" data-reject="${t.id}">Từ chối</button>`}</div></div>`}
+    ${rejecting ? rejectPanel(t.id) : `<div class="topic-bottom"><div><span class="estimate" style="${t.stage === "Awareness" ? "background:#f7f6f3;color:#6b6a65" : t.stage === "Consideration" ? "background:#faeeda;color:#633806" : ""}">${t.estimate}</span><div class="${t.id === "roi" ? "tertiary" : "up"}" style="margin-top:6px;font-size:11px;font-style:italic">${t.history}</div></div><div class="topic-actions">${approved ? approvedActions() : `<button class="btn" data-reject="${t.id}">Từ chối</button><button class="btn btn-primary" data-approve="${t.id}">Duyệt & Tạo brief</button>`}</div></div>`}
     ${open ? topicExpanded(t) : ""}
   </article>`;
 }
